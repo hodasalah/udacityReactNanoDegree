@@ -1,0 +1,668 @@
+installing 
+==========
+npx create-react-native-app appName
+expo start
+===>>>
+==>{{fix adb}}
+==============
+1- C:\Users\dell\AppData\Local\Android\Sdk\platform-tools>
+2- adb logcat
+3- adb kill server
+===> {{udacifitness calender error}}
+========================
+udacifitness calender ==> agenda==>index ===> del [[_component]]
+
+[[ReactNative Slider]]
+------------------------
+*=> npm i @react-native-community/slider
+
+*=> import Slider from "@react-native-community/slider";
+*=>
+<Slider
+    value={value}
+    step={step}
+    maximumValue={max}
+    onValueChange={onChange}
+    minimumValue="0"
+/>
+--------------------------------------
+[[ReactNative Lists]]
+------------------------
+[1]ScrollView (not performant)
+=========>>>>
+<ScrollView>
+    {items.map(item=><Item {...item}>)}
+</ScrollView>
+[2]FlatList
+    <FlatList
+        data={items}
+        renderItem={this.renderItem} 
+    >
+renderItem=({item})=>{
+    return<Item {...item}>
+}
+[3]SectionList
+**What if you wanted to add section headers to a list? 
+FlatList doesn’t quite support these
+**import {
+    StyleSheet,
+    Text,
+    View,
+    SafeAreaView,
+    SectionList
+  } from "react-native";
+  const DATA = [
+    {
+      title: "Main dishes",
+      data: ["Pizza", "Burger", "Risotto"]
+    },
+    {
+      title: "Sides",
+      data: ["French Fries", "Onion Rings", "Fried Shrimps"]
+    },
+    {
+      title: "Drinks",
+      data: ["Water", "Coke", "Beer"]
+    },
+    {
+      title: "Desserts",
+      data: ["Cheese Cake", "Ice Cream"]
+    }
+  ];
+  # for render item method
+  const Item = ({ title }) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+  <SafeAreaView style={styles.container}>
+    <SectionList
+      sections={DATA}
+      keyExtractor={(item, index) => item + index}
+      renderItem={({ item }) => <Item title={item} />}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text style={styles.header}>{title}</Text>
+      )}
+    />
+  </SafeAreaView>
+
+===================================================
+[[Forms in ReactNative]]
+[1] switch Buttons
+==================
+===>
+***
+1. Without KeyboardAvoidingView, the keyboard will "pop up," 
+    hiding text inputs
+
+2. KeyboardAvoidingView can wrap around TextInput components
+3. padding can be adjusted via aprop in KeyboardAvoidingView
+***
+import { View, Switch } from "react-native";
+const App = () => {
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  
+    return (
+        #عشان لما نستخدم الكيبورد وقت الكتابة منغطيش المحتوي
+      <KeyboardAvoidingView
+      behavior= 'padding'
+      style={styles.container}>
+        <Switch
+            #العمود لون
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+            #لون الدايرة
+          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+        <TextInput
+      style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+      onChangeText={text => onChangeText(text)}
+      value={value}
+    />
+      </View>
+    );
+  }
+[2]Text Input
+==============
+import { TextInput } from 'react-native';
+
+const UselessTextInput = () => {
+  const [value, onChangeText] = React.useState('Useless Placeholder');
+
+  return (
+    <TextInput
+      style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+      onChangeText={text => onChangeText(text)}
+      value={value}
+    />
+  );
+}
+***
+1.While both methods are invoked on value change,
+2.onChangeText passes the actual value (text) as the argument.
+3.On the other hand, onChange passes the entire event objectas an argument. 
+4.Both are perfectly valid props,
+5.but the logic of your event handler will need to be tailored to the prop chosen. 
+***
+----------------------
+[3]Picker === select
+===>>>
+const App = () => {
+  const [selectedValue, setSelectedValue] = useState("java");
+  return (
+    <View style={styles.container}>
+      <Picker
+        # mode is availble on android
+        mode="dropdown" or {"dialog" ===default}
+        selectedValue={selectedValue}
+        style={{ height: 50, width: 150 }}
+        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+      >
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
+    </View>
+  );
+}
+***
+{{onValueChange}}
+==>Callback for when an item is selected. 
+==>This is called with the following parameters:
+1. itemValue: the value prop of the item that was selected
+2. itemPosition: the index of the selected item in this picker
+-----------------------------------------------
+[[WebView]]
+===========
+1.Deprecated. 
+2.Use react-native-community/react-native-webview instead.
+3.WebView renders web content in a native view.
+class MyWeb extends Component {
+    render() {
+      return (
+        <WebView
+          source={{
+            uri: 'https://github.com/facebook/react-native'
+          }}
+          style={{ marginTop: 20 }}
+        />
+      );
+    }
+  }
+  ===>Minimal example with inline HTML:
+class MyInlineWeb extends Component {
+    render() {
+        return (
+        <WebView
+            originWhitelist={['*']}
+            source={{ html: '<h1>Hello world</h1>' }}
+        />
+        );
+    }
+}
+((source))
+object contains
+==============
+1.Loads static HTML or a URI (with optional headers) in the WebView. 
+2.Note that static HTML will require setting originWhitelist to ["*"].
+3.uri (string) - The URI to load in the WebView. Can be a local or remote file.
+4.method (string) - The HTTP Method to use. Defaults to GET if not specified. On Android, the only supported methods are GET and POST.
+5.headers (object) - Additional HTTP headers to send with the request. On Android, this can only be used with GET requests.
+6.body (string) - The HTTP body to send with the request. This must be a valid UTF-8 string, and will be sent exactly as specified, with no additional encoding (e.g. URL-escaping or base64) applied. On Android, this can only be used with POST requests.
+=======================
+==>[[Buttons in ReactNative]]
+============================
+[1]
+<TouchableHighlight
+    style={styles.btn}
+    underlayColor="#3ee"
+    onPress={handlePress}
+>
+    <Text style={styles.btnText}>Touchable highlight</Text>
+</TouchableHighlight>
+[2]
+<TouchableOpacity
+    style={styles.btn}
+    onPress={handlePress}
+>
+    <Text>Touchable highlight</Text>
+</TouchableOpacity>
+[3]
+** need android no ios
+** need View inside it 
+** btn styles for View no it
+
+<TouchableNativeFeedback
+    background={TouchableNativeFeedback.SelectableBackground()}
+    onPress={handlePress}
+>
+    <View style={styles.btn}>
+        <Text>Touchable highlight</Text>
+    </View>
+</TouchableNativeFeedback>
+[4]
+<TouchableWithoutFeedback onPress={handlePress} >
+    <View style={styles.btn}>
+        <Text>Touchable highlight</Text>
+    </View>
+</TouchableWithoutFeedback>
+
+----------------------------------
+[[Image in ReactNative]]
+===>>>
+<Image style={{width:100,height:100}} 
+source={require('src of image in our app')}>
+<Image style={{width:100,height:100}} 
+source={{uri:'link of image if image in web'}}>
+----------------------------------------
+[[loader in ReactNative]]
+===>>>
+import React from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+
+const App = () => (
+  <View style={[styles.container, styles.horizontal]}>
+    <ActivityIndicator />
+    <ActivityIndicator size="large" />
+    <ActivityIndicator size="small" color="#0000ff" />
+    <ActivityIndicator size="large" color="#00ff00" />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  }
+});
+-----------------------------------------------------
+[[Modal]]
+===>>>
+import {
+    Alert,
+    Modal,
+    StyleSheet,
+    Text,
+    TouchableHighlight,
+    View
+  } from "react-native";
+  
+  const App = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide" OR "fade" OR "none"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello World!</Text>
+  
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+  
+        <TouchableHighlight
+          style={styles.openButton}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
+          <Text style={styles.textStyle}>Show Modal</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  };
+  
+  const styles = StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5
+    },
+    openButton: {
+      backgroundColor: "#F194FF",
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    }
+  });
+  
+  export default App;
+
+
+
+  ------------------------------------------
+  AsyncStorage
+  ===========
+  AsyncStorage === localStorage
+  * getItem
+  * mergeItem
+  * setItem
+  * removeItem
+  * multiRemove
+  * clear
+  1.localStorage has no expiration date.This means that even if a session ends, data will not be lost!
+  ***
+  1.AsyncStorage is a simple, unencrypted, asynchronous, 
+  2.persistent, key-value storage system that is global to the app. 
+  3.It should be used instead of LocalStorage.
+
+  --------------------------------
+  [[SAVE DATA WITH AsyncStorage]]
+  import { createStore } from 'redux';
+  import Reducer from '../reducers/reducer';
+
+const configureStore = () => {
+  const store = createStore(Reducer);
+
+  store.subscribe(() => {
+    localStorage.state = JSON.stringify(store.getState());
+  });
+
+  return store;
+};
+
+export default configureStore;
+
+
+
+
+-----------------------------------------
+{{Platform}}
+============
+import {Platform} from 'react-native'
+{
+  Platform.OS === 'ios'
+  ?<Ionicons name="ios-pizza" color="red" size="100">
+  :<Ionicons name="md-pizza" color="red" size="100">
+
+}
+----------------------------------------
+{{Dimensions_API}}
+==================
+***
+React Native also comes with Dimensions, 
+which allows you to select 
+window's width and height in the user's device!
+***
+
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
+
+
+---------------------------------------------
+React navigation
+====================
+1.npm install @react-navigation/native
+2.expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+3.npm install @react-navigation/stack
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+[[Routs]]
+===>>>
+
+<NavigationContainer>
+  <Stack.Navigator>
+    <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Overview' }}/>
+  </Stack.Navigator>
+</NavigationContainer>
+
+[[links]]
+===>>>
+<Button title="Go to Home" onPress={() => navigation.navigate('Home',{itemId: 86,
+  otherParam: 'anything you want here',})} />
+<Button title="Go back" onPress={() => navigation.goBack()} />
+<Button title="Go back to first screen in stack" onPress={() => navigation.popToTop()}/>
+[[navigation]]
+===>>>>
+1. navigation.navigate("routeName",{params})
+2. navigation.goBack()
+3. navigation.push("routeName")
+4. navigation.popToTop()==> #go to first screen
+**Sometimes we might want to pass additional props to a screen. 
+**We can do that with 2 approaches:
+[1] Use React context and wrap the navigator with a context provider to pass data to the screens (recommended).
+[2] Use a render callback for the screen instead of specifying a component prop:
+
+<Stack.Screen name="Home">
+  {props => <HomeScreen {...props} extraData={someData} />}
+</Stack.Screen>
+
+
+{{using Route}}
+===>>>
+
+function DetailsScreen({ route, navigation }) {
+  /* 2. Get the param */
+  const { itemId, otherParam } = route.params;
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Details Screen</Text>
+      <Text>itemId: {JSON.stringify(itemId)}</Text>
+      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+      <Button
+        title="Go to Details... again"
+        onPress={() =>
+          navigation.push('Details', {
+            itemId: Math.floor(Math.random() * 100),
+          })
+        }
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+-----------------------------------------------------
+{{Tab navigation}}
+=====================
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+<NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused
+                ? 'ios-information-circle'
+                : 'ios-information-circle-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'ios-list-box' : 'ios-list';
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+-----------------------------
+{{Drawer navigation}}
+========================
+npm install @react-navigation/drawer
+
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Drawer = createDrawerNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}
+
+**To open and close drawer, use the following helpers
+-----
+navigation.openDrawer();
+navigation.closeDrawer();
+navigation.toggleDrawer();
+-----
+
+Each of these functions, behind the scenes, are simply dispatching actions:
+
+navigation.dispatch(DrawerActions.openDrawer());
+navigation.dispatch(DrawerActions.closeDrawer());
+navigation.dispatch(DrawerActions.toggleDrawer());
+
+---------------->>>
+If you would like to determine if drawer is open or closed, 
+you can do the following:
+
+import { useIsDrawerOpen } from '@react-navigation/drawer';
+
+// ...
+const isDrawerOpen = useIsDrawerOpen();
+
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+ #first screen
+function Feed({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Feed Screen</Text>
+      <Button title="Open drawer" onPress={() => navigation.openDrawer()} />
+      <Button title="Toggle drawer" onPress={() => navigation.toggleDrawer()} />
+    </View>
+  );
+}
+#Drawer menu
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Close drawer"
+        onPress={() => props.navigation.closeDrawer()}
+      />
+      <DrawerItem
+        label="Toggle drawer"
+        onPress={() => props.navigation.toggleDrawer()}
+      />
+    </DrawerContentScrollView>
+  );
+}
+#Drawer Screens
+const Drawer = createDrawerNavigator();
+
+function MyDrawer() {
+  return (
+    <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Feed" component={Feed} />
+      <Drawer.Screen name="Notifications" component={Notifications} />
+    </Drawer.Navigator>
+  );
+}
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyDrawer />
+    </NavigationContainer>
+  );
+}
+
+==============
+hooks === shouldComponentUpdate
+const Modal = React.memo(
+  props => {...},
+  (prevProps, nextProps) => prevProps.show === nextProps.show
+);
+#########
+0. BASICS
+1. animation
+2. location
+3. Notifications
+4. Permissions
+5. ImagePicker
+6. AsyncStorage
+######
+
+[To remove an item from an array by id:]
+
+return state.filter(item => item.id !== action.id)
+[To remove a key from an object by id:]
+
+let copy = Object.assign({}, state) // assuming you use Object.assign() polyfill!
+delete copy[action.id] // shallowly mutating a shallow copy is fine
+return copy

@@ -1,0 +1,243 @@
+[1]imperative vs declarative code 
+----------------------------------
+==> imperative
+    === === ===
+const people = ['Amanda', 'Farrin', 'Geoff', 'Karen', 'Richard', 'Tyler']
+const excitedPeople = []
+
+for (let i = 0; i < people.length; i++) {
+ excitedPeople[i] = people[i] + '!'
+}
+==> declarative
+    === === ===
+const people = ['Amanda', 'Farrin', 'Geoff', 'Karen', 'Richard', 'Tyler']
+const excitedPeople = people.map(name => name + '!')
+const longNames = people.filter(name => name.length > 6)
+---------
+Imperative code instructs JavaScript on how it should perform each step. 
+With declarative code, we tell JavaScript what we want to be done, 
+and let JavaScript take care of performing the steps.
+
+====================================
+React is 
+----------
+React is a view layer that uses virtual DOM for performance.”
+Another motto you can often hear is “React can be used as the V in MVC.” 
+
+[[=>composition, =>unidirectional data flow, =>freedom from DSLs, 
+    =>explicit mutation and =>static mental model.]]
+[1] composional model
+-------------------- 
+[2] declarative code
+-------------------
+    React is declarative because we write the code that we want, 
+    and React is in charge of taking our declared code and performing 
+    all of the JavaScript/DOM steps to get us to our desired result
+
+[3] unidirectional data flow
+----------------------------
+    In React, the data flows from the parent component
+    to a child component.
+[4] It's Just JavaScript
+------------------------
+[5] React Elements is just JavaScript objects
+[6] virtual Dom ==> objects that Describe real Dom nodes
+[7] when we create real Dom
+---------------------------
+when we call React.createElement() we doesn't actually create areal Dom
+but when we do render() we actually create areal dom elements
+-----------------------------------------------------
+React.createElement()
+=======================
+if i want render list of 3 names
+1- hoda
+2- zozo
+3- tamer
+// [1]
+    const list = React.createElement('ol',null , 
+        react.createElement('li' , null, 'hoda'),
+        react.createElement('li' , null, 'zozo'),
+        react.createElement('li' , null, 'tamer')
+    )
+ReactDOM.render(list , docum+ent.querySelector('#root'));
+// [2]
+    const persons = ['hoda' , 'zozo' ,'tamer']
+    const list = React.createElement('ol',null ,
+    persons.map(person=>
+        React.createElement('li' , {key:person} , person)
+    ))
+ReactDOM.render(list , document.querySelector('#root'));
+-------------------------------------------------------------------------
+create React app
+==================
+install  3 packages ==>
+[1] React [2] ReactDOM [3] React scripts
+----------------
+ReactScripts
+============
+install important libraries
+[1] Babel
+----------
+    With a transpiler like Babel, we can stay ahead of the web browsers and 
+    use new features of ECMAscript when they are released instead of waiting
+    for the browser manufacturers to integrate the features
+[2]webpack
+----------
+NeverNeverDoThis
+================
+    this.state = {
+        user: props.user
+    }
+=== >> In the above example, if props are ever updated, 
+    >> the current state will not change unless the component is "refreshed." 
+        Using props to produce a component's initial state also 
+        leads to duplication of data, 
+    >> deviating from a dependable "source of truth."
+
+----------------------------------
+componentLifeCycle
+=================
+componentDidMount()
+===>
+invoked immediately after the component is inserted into the DOM
+
+componentWillUnmount()
+===>
+invoked immediately before a component is removed from the DOM
+
+getDerivedStateFromProps()
+===>
+invoked after a component is instantiated as well as when it receives brand new props
+
+render()
+===>
+render() Is For Rendering, Only!
+I just mentioned this in the video, but I want to stress 
+it again - data should not be fetched in the render 
+method! A component's render() method should only be used to render that component; 
+it should not make any HTTP requests, 
+fetch data that's used to display the content, 
+or alter the DOM. The render() method also shouldn't 
+call any other functions that do any of these things,
+either.So if render() is only used for displaying 
+content,we put the code that should handle things 
+like Ajax requests in what React calls lifecycle 
+events.
+================
+shouldComponentUpdate()
+======================
+The default behavior is to re-render on every state change, 
+and in the vast majority 
+of cases you should rely on the default behavior.
+Do not rely on it to “prevent” a rendering, as this can lead to bugs.
+Consider using the built-in PureComponent instead of writing 
+shouldComponentUpdate() by hand.
+We do not recommend doing deep equality checks or 
+using JSON.stringify() in shouldComponentUpdate(). 
+It is very inefficient and will harm performance.
+
+-------------------------------------
+{{Adding to the DOM}}
+========================
+The following lifecycle events will be called in order when a component is being added to the DOM:
+
+[1]==>constructor()
+[2]==>getDerivedStateFromProps()
+[3]==>render()
+[4]==>componentDidMount()
+⚠️componentWillMount() has been deprecated. ⚠️
+-----------------------------------
+{{Re-rendering}}
+================
+The following lifecycle events will be called in order when a component is re-rendered to the DOM:
+
+[1]==>getDerivedStateFromProps()
+[2]==>shouldComponentUpdate()
+[3]==>render()
+[4]==>getSnapshotBeforeUpdate()(specific use cases)
+[5]==>componentDidUpdate()
+⚠️componentWillReceiveProps() and componentWillUpdate() have been deprecated. ⚠️
+
+shouldComponentUpdate(nextProps, nextState){
+    return this.props.toggle !== nextProps.toggle;
+ }
+------------------------------------
+{{Removing from the DOM}}
+==========================
+This lifecycle event is called when a component is being removed from the DOM:
+
+[1]==>componentWillUnmount()
+--------------------------------------------
+single-page applications
+========================
+    can work in different ways. One way a single-page app loads is by downloading 
+    the entire site's contents all at once. This way, when you're navigating around on the site, 
+    everything is already available to the browser, and it doesn't need to refresh the page. 
+    Another way single-page apps work is by downloading everything that's needed
+    to render the page the user requested.Then when the user navigates to a new page,
+    asynchronous JavaScript requests are made for just the content that was requested.
+    Another key factor in a good single-page app is that the URL controls the page content.
+    Single-page applications are highly interactive, and users want to be able to get back 
+    to a certain state using just the URL. Why is this important? Bookmarkability! (pretty sure that's not a word...yet) 
+    When you bookmark a site, that bookmark is only a URL, it doesn't record the state of that page.
+
+    Have you noticed that any of the actions you perform in the app do not update the page's URL? 
+    ===>We need to create React applications that offer bookmarkable pages!
+----------------------------------------------
+some info about <BrowserRouter /> component in react router dom
+===========================>>>>>>>>>>>
+let's see  component <BrowserRouter />
+class BrowserRouter extends React.Component {
+    static propTypes = {
+      basename: PropTypes.string,
+      forceRefresh: PropTypes.bool,
+      getUserConfirmation: PropTypes.func,
+      keyLength: PropTypes.number,
+      children: PropTypes.node
+    }
+  
+    history = createHistory(this.props)
+  
+    render() {
+      return <Router history={this.history} children={this.props.children} />
+    }
+  }
+===> ===> ===> ===> ===> ===>
+When you use BrowserRouter, what you're really doing is rendering a Router component 
+and passing it a history prop. 
+==> Wait, what is history? 
+history comes from the history library (also built by React Training). 
+The whole purpose of this library is it 
+abstracts away the differences in various environments and 
+provides a minimal API that lets you manage the history stack, 
+navigate, confirm navigation, and persist state between sessions
+===>
+    when you use BrowserRouter, you're creating a history object which 
+will listen to changes in the URL and make sure your app is made aware 
+of those changes
+===>
+About Link  component
+<Link to={{
+    pathname: '/courses',
+    search: '?sort=name',
+    hash: '#the-hash',
+    state: { fromDashboard: true }
+   }}>
+    Courses
+</Link>
+-------------------------------------
+serialize form  info
+====================
+Serialize The Form Data
+===>
+At this point, our form will serialize the values from user input 
+(i.e., the name and email), adding them as a query string to the URL. 
+We can add some additional functionality by having our app serialize these 
+form fields on its own. After all, we want the app to ultimately handle creating 
+the contact and saving it to the state.
+
+To accomplish this, we'll use the form-serialize package to output 
+this information as a regular JavaScript object for the app to use.
+
+npm install --save form-serialize
+-------------------------------------------------------------
