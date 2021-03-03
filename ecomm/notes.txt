@@ -1,0 +1,47 @@
+https://hodastore.netlify.app/
+
+#installing problems solving
+$ npm cache clear --force
+{then}
+$ npm cache verify
+=========================================================
+#install dependencies
+===>>>>>
+npx create-react-app myapp
+npm install @material-ui/core @material-ui/icons
+npm install @chec/commerce.js @stripe/react-stripe-js @stripe/stripe-js react-router-dom react-hook-form
+===>>
+#links
+==>
+https://commercejs.com​
+[0]import Commerce from "@chec/commerce.js";
+[1]const commerce =new Commerce(public key,true)
+[2]fetch alldata ==>await commerce.products.list()
+## const { data } = await commerce.products.list();
+###setProducts(data);
+[3]fetch cart data==>await commerce.cart.retrieve()
+##const cartContent = await commerce.cart.retrieve();
+###setCart(cartContent);
+[4]addToCart ==>commerce.cart.add(id ,quantity)
+##const handleAddToCart = async (productID, Amount) => {
+    #const item = await commerce.cart.add(productID, Amount);
+    #setCart(item.cart);
+##};
+[5]update_cart_item_amount==>commerce.cart.update(productId, { quantity })
+##const handleUpdateCardAmount = async (productId, quantity) => {
+    #const response = await commerce.cart.update(productId, { quantity });
+    #setCart(response.cart);
+##};
+[6]Remove_Cart_Item==>commerce.cart.remove(productId);
+##const handleRemoveFromCard = async (productId) => {
+    #const response = await commerce.cart.remove(productId);
+    #setCart(response.cart);
+##};
+[7]Empty_cart_items==>commerce.cart.empty();
+##const handleEmptyCard = async () => {
+    #const response = await commerce.cart.empty();
+    #setCart(response.cart);
+##};
+
+===================
+npm run build 

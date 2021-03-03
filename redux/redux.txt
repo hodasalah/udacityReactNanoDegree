@@ -38,25 +38,25 @@ state from the store.
 ------->>>>>
 function createStore (reducer) {
 `// The store should have four parts`
-    // 1. The state
-    // 2. Get the state. ==> `getState()`
-    // 3. Listen to changes on the state. ==>`subscribe()`
-    // 4. Update the state. ==> `dispatch()`
+    # 1. The state
+    # 2. Get the state. ==> `getState()`
+    # 3. Listen to changes on the state. ==>`subscribe()`
+    # 4. Update the state. ==> `dispatch()`
   
-    let state; // equal undefined
+    let state; # equal undefined
     Let listeners = [];
-    `// the function which getState`
+    # the function which get State
     const getState = () => state;
-    `// the function which listen  to our state`
-    // listener argument is an func
+    # the function which listen  to our state
+    # listener argument is an func
     const subscribe = (listener) => {
         listeners.push(listener)
-        `// TO UNSUBSCRIBE`
+    # TO UNSUBSCRIBE`
         return () => {
           listeners = listeners.filter((l) => l !== listener)
         }
     }
-    // updating our store via dispatch
+    # updating our store via dispatch
     const dispatch = (action) => {
         state = reducer(state, action)
         listeners.forEach((listener) => listener())
@@ -68,14 +68,14 @@ function createStore (reducer) {
         dispatch,
     }
 }
-`//ConstantsActions`
+#ConstantsActions`
 const ADD_TODO = 'ADD_TODO'
 const REMOVE_TODO = 'REMOVE_TODO'
 const TOGGLE_TODO = 'TOGGLE_TODO'
 const ADD_GOAL = 'ADD_GOAL'
 const REMOVE_GOAL = 'REMOVE_GOAL'
 
-`// make action creators`
+# make action creators`
 function addTodoAction (todo) {
     return {
       type: ADD_TODO,
@@ -110,7 +110,7 @@ function removeGoalAction (id) {
       id,
     }
 }
-`// reducer it is a pure function which update state`
+# reducer it is a pure function which update state`
 //todosReducer
 function todos (state = [], action) {
     switch(action.type) {
